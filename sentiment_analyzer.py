@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score,confusion_matrix
 from nltk.corpus import stopwords
 import json, numpy as np
-
+import pickle, jsonify
 
 
 def load_data():
@@ -51,6 +51,8 @@ def train_classifier(param_grid):
     print(accuracy_score(y_test,y_pred))
     cf = confusion_matrix(y_test, y_pred)
     print("Classification Report:\n", classification_report(y_test, y_pred))
+    serialize_model(best_model, tfidf, grid)
+    
     
     return cf
     
@@ -72,3 +74,13 @@ def preprocess_text(text):
     tokens = text.split()
     tokens = [word for word in tokens if word not in stop_words]      # Remove stopwords
     return ' '.join(tokens)
+
+def serialize_model(tfidf_vectorizer, model, gridmodel):
+    with open('tfidf_vectorizer.pkl', 'wb') as file:
+        pickle.dump(tfidf_vectorizer, file)
+
+    with open("sentiment_analysis_best_model.pkl","wb") as sentiment_analysis_best_model:
+        pickle.dump(model,sentiment_analysis_best_model)
+
+    with open("grid_model.pkl","wb") as grid_model:
+        pickle.dump(gridmodel,grid_model)
