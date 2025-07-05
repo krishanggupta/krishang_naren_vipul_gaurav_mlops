@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score,confusion_matrix
 from nltk.corpus import stopwords
 import json, numpy as np
-
+import pickle, jsonify
 
 
 def load_data():
@@ -46,14 +46,36 @@ def train_classifier(param_grid):
     cf = confusion_matrix(y_test, y_pred)
     print("Classification Report:\n", classification_report(y_test, y_pred))
     
-    y_pred = model.predict(X_test)
+    grid = train_with_tuning(model, param_grid, X_train, y_train)
+
+    # Print the best parameters and best score
+    print("Best parameters: {}".format(grid.best_params_))
+    print("Best cross-validation score: {:.2f}".format(grid.best_score_))
+
+    best_model = grid.best_estimator_
+
+    y_pred = best_model.predict(X_test)
 
     print(accuracy_score(y_test,y_pred))
     cf = confusion_matrix(y_test, y_pred)
     print("Classification Report:\n", classification_report(y_test, y_pred))
-    
+
+    serialize_model(best_model, tfidf, grid)
+        
     return cf
     
+def train_with_tuning(classifier, param_grid, X_train, y_train):
+    # param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    #           'penalty': ['l1', 'l2'],
+    #           'solver': ['liblinear', 'lbfgs']}
+
+    # Perform grid search with cross-validation
+    grid = GridSearchCV(classifier, param_grid, cv=5, refit=True, verbose=0)
+
+    # Fit the grid search to the training data
+    grid.fit(X_train, y_train)
+
+    return grid
 
     
 def train_model(params):
@@ -72,3 +94,13 @@ def preprocess_text(text):
     tokens = text.split()
     tokens = [word for word in tokens if word not in stop_words]      # Remove stopwords
     return ' '.join(tokens)
+
+def serialize_model(tfidf_vectorizer, model, gridmodel):
+    with open('tfidf_vectorizer.pkl', 'wb') as file:
+        pickle.dump(tfidf_vectorizer, file)
+
+    with open("sentiment_analysis_best_model.pkl","wb") as sentiment_analysis_best_model:
+        pickle.dump(model,sentiment_analysis_best_model)
+
+    with open("grid_model.pkl","wb") as grid_model:
+        pickle.dump(gridmodel,grid_model)
