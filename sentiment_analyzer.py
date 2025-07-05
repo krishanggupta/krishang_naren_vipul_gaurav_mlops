@@ -16,16 +16,15 @@ def load_data():
     test_df = pd.read_csv(r'data\test_dataset.csv')    # Same columns
     return (train_df, test_df)
 
-
 def train_classifier(param_grid):
     # Download NLTK stopwords
     nltk.download('stopwords')
-    stop_words = list(stopwords.words('english'))
+    stop_words = set(stopwords.words('english'))
 
     train_df, test_df = load_data()
     # Preprocess reviews
-    train_df['clean_review'] = train_df['review'].apply(preprocess_text)
-    test_df['clean_review'] = test_df['review'].apply(preprocess_text)
+    train_df['clean_review'] = train_df['review'].apply(preprocess_text, stop_words=stop_words)
+    test_df['clean_review'] = test_df['review'].apply(preprocess_text, stop_words=stop_words)
 
     # TF-IDF Vectorization
     tfidf = TfidfVectorizer(max_features=10000)
@@ -33,8 +32,8 @@ def train_classifier(param_grid):
     X_test = tfidf.transform(test_df['clean_review'])
 
     # Encode sentiment (assuming 'positive' and 'negative')
-    y_train = train_df['sentiment'] #//.map({1: 1, 0: 0})
-    y_test = test_df['sentiment'] #.map({'positive': 1, 'negative': 0})
+    y_train = train_df['sentiment'] 
+    y_test = test_df['sentiment']
 
     # Train model
     model = LogisticRegression()
@@ -58,11 +57,12 @@ def train_classifier(param_grid):
 
     print(accuracy_score(y_test,y_pred))
     cf = confusion_matrix(y_test, y_pred)
-    print("Classification Report:\n", classification_report(y_test, y_pred))
+    report = classification_report(y_test, y_pred)
+    print("Classification Report:\n", report)
 
     serialize_model(best_model, tfidf, grid)
         
-    return cf
+    return report
     
 def train_with_tuning(classifier, param_grid, X_train, y_train):
     # param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
@@ -79,15 +79,12 @@ def train_with_tuning(classifier, param_grid, X_train, y_train):
 
     
 def train_model(params):
-
     cf = train_classifier(params)
-
-    return json.dumps(cf.tolist())
+    return json.dumps({"Result":cf})
 
 
 # Preprocessing function
-def preprocess_text(text):
-    stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that's", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
+def preprocess_text(text, stop_words):
 
     text = text.lower()                              # Lowercase
     text = text.translate(str.maketrans('', '', string.punctuation))  # Remove punctuation
@@ -104,3 +101,32 @@ def serialize_model(tfidf_vectorizer, model, gridmodel):
 
     with open("grid_model.pkl","wb") as grid_model:
         pickle.dump(gridmodel,grid_model)
+
+def deserialize_model():
+    with open('tfidf_vectorizer.pkl', 'rb') as tfidf_vectorizer:
+        vectorizer = pickle.load(tfidf_vectorizer)
+
+    with open("sentiment_analysis_best_model.pkl", "rb") as sentiment_analysis_best_model:
+        best_model = pickle.load(sentiment_analysis_best_model)
+
+    with open("grid_model.pkl","rb") as grid_model:
+        grid = pickle.load(grid_model)
+        
+    return (vectorizer,best_model, grid)
+
+def predict(params):
+    model, vectorizer, grid =  deserialize_model()
+    text_to_predict = params["text"]
+
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('english'))
+    
+    text_to_predict = preprocess_text(text_to_predict, stop_words)
+
+    # TF-IDF Vectorization
+    string_list = [text_to_predict]
+    to_predict = vectorizer.transform(string_list)
+    y_pred = model.predict(to_predict)
+    sentiment =  "Positive Sentiment" if  y_pred[0] else "Negative sentiment"
+    # print(accuracy)
+    return json.dumps({"Result":sentiment})
