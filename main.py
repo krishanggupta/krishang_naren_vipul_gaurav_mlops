@@ -17,5 +17,6 @@ def predict_sentiment():
     params = request.get_json()
     result  = model.predict(params)
     return result
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5004)
