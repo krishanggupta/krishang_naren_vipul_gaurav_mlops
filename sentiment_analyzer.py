@@ -46,7 +46,8 @@ def train_classifier(param_grid):
 
     print(accuracy_score(y_test,y_pred))
     cf = confusion_matrix(y_test, y_pred)
-    print("Classification Report:\n", classification_report(y_test, y_pred))
+    report_without_tuning = classification_report(y_test, y_pred, output_dict = True)
+    print("Classification Report:\n", classification_report(y_test, y_pred, output_dict = True))
     
     grid = train_with_tuning(model, X_train, y_train, param_grid)
 
@@ -60,26 +61,23 @@ def train_classifier(param_grid):
 
     print(accuracy_score(y_test,y_pred))
     cf = confusion_matrix(y_test, y_pred)
-    report = classification_report(y_test, y_pred)
-    print("Classification Report:\n", report)
+    report_with_tuning = classification_report(y_test, y_pred, output_dict = True)
+    print("Classification Report:\n", report_with_tuning)
 
     serialize_model(best_model, tfidf, grid)
         
-    return report
+    return report_with_tuning
     
 def train_with_tuning(classifier, X_train, y_train, param_grid):
-    # param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
-    #           'penalty': ['l1', 'l2'],
-    #           'solver': ['liblinear', 'lbfgs']}
-    if (param_grid == null):
-        param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    if (param_grid is None):
+        param_grid = {'C': [0.001, 0.01, 10],
                'penalty': ['l1', 'l2'],
                'solver': ['liblinear', 'lbfgs']}
 
     # Perform grid search with cross-validation
     mlflow.set_experiment('Team_1')
     mlflow.autolog()
-    grid = GridSearchCV(classifier, param_grid, cv=5, refit=True, verbose=0)
+    grid = GridSearchCV(classifier, param_grid, cv=5)
 
     # Fit the grid search to the training data
     grid.fit(X_train, y_train)
@@ -88,8 +86,8 @@ def train_with_tuning(classifier, X_train, y_train, param_grid):
 
     
 def train_model(params):
-    cf = train_classifier(params)
-    return json.dumps({"Result":cf})
+    report_with_tuning = train_classifier(params)
+    return json.dumps({"Results with tuning ":report_with_tuning})
 
 
 # Preprocessing function
@@ -136,11 +134,11 @@ def predict(params):
     string_list = [text_to_predict]
     to_predict = vectorizer.transform(string_list)
     y_pred = model.predict(to_predict)
-    sentiment =  "Positive Sentiment" if  y_pred[0] else "Negative sentiment"
+    sentiment =  "Positive Sentiment" if  y_pred[0] else "Negative Sentiment"
     # print(accuracy)
     return json.dumps({"Result":sentiment})
 
-def get_best_parameter(params):
+def get_best_parameter():
     model, vectorizer, grid = deserialize_model()
     # print(accuracy)
     return json.dumps({"best parameters": grid.best_params_})
