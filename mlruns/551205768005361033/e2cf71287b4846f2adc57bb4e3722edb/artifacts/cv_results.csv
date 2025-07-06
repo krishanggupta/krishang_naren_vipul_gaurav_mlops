@@ -1,0 +1,5 @@
+mean_fit_time,std_fit_time,mean_score_time,std_score_time,param_C,param_penalty,param_solver,params,split0_test_score,split1_test_score,split2_test_score,split3_test_score,split4_test_score,mean_test_score,std_test_score,rank_test_score
+0.10121159553527832,0.02247455812003027,0.0037555694580078125,0.001080723221876193,0.001,l1,liblinear,"{'C': 0.001, 'penalty': 'l1', 'solver': 'liblinear'}",0.5,0.5,0.5,0.5,0.5,0.5,0.0,3
+0.010549259185791016,0.0018000906783813737,0.0,0.0,0.001,l1,lbfgs,"{'C': 0.001, 'penalty': 'l1', 'solver': 'lbfgs'}",,,,,,,,4
+0.103798246383667,0.006093387813140692,0.002894687652587891,0.0007143084197277195,0.001,l2,liblinear,"{'C': 0.001, 'penalty': 'l2', 'solver': 'liblinear'}",0.8102,0.7948,0.7984,0.798,0.8036,0.8009999999999999,0.005396295025292832,1
+0.05077195167541504,0.009498295921679287,0.002565336227416992,0.00024090917521195032,0.001,l2,lbfgs,"{'C': 0.001, 'penalty': 'l2', 'solver': 'lbfgs'}",0.8058,0.7896,0.7912,0.8002,0.8018,0.79772,0.006269417835812181,2

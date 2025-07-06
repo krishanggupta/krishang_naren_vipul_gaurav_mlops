@@ -1,0 +1,21 @@
+artifact_path: Best_Estimator
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+mlflow_version: 2.21.0
+model_size_bytes: 80733
+model_uuid: 5dbc65cee90a4b5793b3bf9e4a0dc64c
+prompts: null
+run_id: b0cfcdc750f34834ad122502b49cab1a
+utc_time_created: '2025-07-06 10:13:09.698507'
