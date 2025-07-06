@@ -10,14 +10,19 @@ def ping():
 @app.post("/sentiment-analysis/train")
 def train_model():
     params = request.get_json()
-    sentiment_analyzer.train_model(params)
-    return params
+    return sentiment_analyzer.train_model(params)
 
 @app.post("/sentiment-analysis/predict")
 def predict_sentiment():
     params = request.get_json()
     result  = sentiment_analyzer.predict(params)
     return result
+
+@app.get("/sentiment-analysis/get_best-parameter")
+def get_best_parameter():
+    params = request.get_json()
+    return sentiment_analyzer.get_best_parameter(params)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5004)
