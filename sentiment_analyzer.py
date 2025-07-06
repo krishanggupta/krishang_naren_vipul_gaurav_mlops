@@ -48,7 +48,7 @@ def train_classifier(param_grid):
     cf = confusion_matrix(y_test, y_pred)
     print("Classification Report:\n", classification_report(y_test, y_pred))
     
-    grid = train_with_tuning(model, param_grid, X_train, y_train)
+    grid = train_with_tuning(model, X_train, y_train, param_grid)
 
     # Print the best parameters and best score
     print("Best parameters: {}".format(grid.best_params_))
@@ -67,10 +67,14 @@ def train_classifier(param_grid):
         
     return report
     
-def train_with_tuning(classifier, param_grid, X_train, y_train):
+def train_with_tuning(classifier, X_train, y_train, param_grid):
     # param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
     #           'penalty': ['l1', 'l2'],
     #           'solver': ['liblinear', 'lbfgs']}
+    if (param_grid == null):
+        param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
+               'penalty': ['l1', 'l2'],
+               'solver': ['liblinear', 'lbfgs']}
 
     # Perform grid search with cross-validation
     mlflow.set_experiment('Team_1')
