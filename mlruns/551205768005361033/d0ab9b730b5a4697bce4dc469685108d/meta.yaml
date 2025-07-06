@@ -1,0 +1,15 @@
+artifact_uri: file:///E:/Learnings/Masters/MTech-Applied%20AI%20-%20VNIT-%20Intellipaat/Sem-2/ML%20Ops/Github/mlops-final/krishang_naren_vipul_gaurav_mlops/mlruns/551205768005361033/d0ab9b730b5a4697bce4dc469685108d/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '551205768005361033'
+lifecycle_stage: active
+run_id: d0ab9b730b5a4697bce4dc469685108d
+run_name: serious-wren-84
+run_uuid: d0ab9b730b5a4697bce4dc469685108d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1751794044089
+status: 1
+tags: []
+user_id: naren

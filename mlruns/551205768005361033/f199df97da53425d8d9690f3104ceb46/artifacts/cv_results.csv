@@ -1,0 +1,2 @@
+mean_fit_time,std_fit_time,mean_score_time,std_score_time,param_C,param_penalty,param_solver,params,split0_test_score,split1_test_score,split2_test_score,split3_test_score,split4_test_score,mean_test_score,std_test_score,rank_test_score
+0.5549012660980225,0.07060971395054544,0.004284381866455078,0.0014800270251177615,5,l2,liblinear,"{'C': 5, 'penalty': 'l2', 'solver': 'liblinear'}",0.8608,0.8328,0.8466,0.8532,0.8654,0.85176,0.011453837784777633,1

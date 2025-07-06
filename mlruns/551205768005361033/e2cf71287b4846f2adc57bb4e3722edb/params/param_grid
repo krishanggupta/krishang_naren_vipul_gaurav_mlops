@@ -1,0 +1,1 @@
+{'C': [0.001], 'penalty': ['l1', 'l2'], 'solver': ['liblinear', 'lbfgs']}
