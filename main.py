@@ -18,5 +18,11 @@ def predict_sentiment():
     result  = sentiment_analyzer.predict(params)
     return result
 
+@app.post("/sentiment-analysis/get_best-parameter")
+def get_best_parameter():
+    params = request.get_json()
+    return sentiment_analyzer.get_best_parameter(params)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5004)
