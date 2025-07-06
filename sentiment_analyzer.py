@@ -130,3 +130,8 @@ def predict(params):
     sentiment =  "Positive Sentiment" if  y_pred[0] else "Negative sentiment"
     # print(accuracy)
     return json.dumps({"Result":sentiment})
+
+def get_best_parameter(params):
+    model, vectorizer, grid = deserialize_model()
+    # print(accuracy)
+    return json.dumps({"best parameters": grid.best_params_})
