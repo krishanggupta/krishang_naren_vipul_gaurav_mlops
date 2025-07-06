@@ -1,0 +1,2 @@
+mean_fit_time,std_fit_time,mean_score_time,std_score_time,params,split0_test_score,split1_test_score,split2_test_score,split3_test_score,split4_test_score,mean_test_score,std_test_score,rank_test_score
+0.4950451374053955,0.10794903516485456,0.022043180465698243,0.0057341665748652125,{},0.8676,0.8526,0.8542,0.8582,0.8712,0.8607600000000002,0.007374984745746941,1
