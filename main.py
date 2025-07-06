@@ -18,10 +18,9 @@ def predict_sentiment():
     result  = sentiment_analyzer.predict(params)
     return result
 
-@app.get("/sentiment-analysis/get_best-parameter")
+@app.get("/sentiment-analysis/get-best-parameter")
 def get_best_parameter():
-    params = request.get_json()
-    return sentiment_analyzer.get_best_parameter(params)
+    return sentiment_analyzer.get_best_parameter()
 
 
 if __name__ == "__main__":
