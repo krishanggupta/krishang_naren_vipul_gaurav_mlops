@@ -8,6 +8,8 @@ from sklearn.metrics import classification_report, accuracy_score,confusion_matr
 from nltk.corpus import stopwords
 import json, numpy as np
 import pickle, jsonify
+import mlflow
+import mlflow.sklearn
 
 
 def load_data():
@@ -35,6 +37,7 @@ def train_classifier(param_grid):
     y_train = train_df['sentiment'] 
     y_test = test_df['sentiment']
 
+
     # Train model
     model = LogisticRegression()
     model.fit(X_train, y_train)
@@ -45,7 +48,7 @@ def train_classifier(param_grid):
     cf = confusion_matrix(y_test, y_pred)
     print("Classification Report:\n", classification_report(y_test, y_pred))
     
-    grid = train_with_tuning(model, param_grid, X_train, y_train)
+    grid = train_with_tuning(model, X_train, y_train, param_grid)
 
     # Print the best parameters and best score
     print("Best parameters: {}".format(grid.best_params_))
@@ -64,17 +67,23 @@ def train_classifier(param_grid):
         
     return report
     
-def train_with_tuning(classifier, param_grid, X_train, y_train):
+def train_with_tuning(classifier, X_train, y_train, param_grid):
     # param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
     #           'penalty': ['l1', 'l2'],
     #           'solver': ['liblinear', 'lbfgs']}
+    if (param_grid == null):
+        param_grid = {'C': [0.001, 0.01, 0.1, 1, 10, 100],
+               'penalty': ['l1', 'l2'],
+               'solver': ['liblinear', 'lbfgs']}
 
     # Perform grid search with cross-validation
+    mlflow.set_experiment('Team_1')
+    mlflow.autolog()
     grid = GridSearchCV(classifier, param_grid, cv=5, refit=True, verbose=0)
 
     # Fit the grid search to the training data
     grid.fit(X_train, y_train)
-
+    mlflow.sklearn.log_model(grid.best_estimator_,"Best_Estimator")
     return grid
 
     
