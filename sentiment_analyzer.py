@@ -14,8 +14,8 @@ import mlflow.sklearn
 
 def load_data():
     # Load data
-    train_df = pd.read_csv(r'data\train_dataset.csv')  # Columns: 'review', 'sentiment'
-    test_df = pd.read_csv(r'data\test_dataset.csv')    # Same columns
+    train_df = pd.read_csv(r'data/train_dataset.csv')  # Columns: 'review', 'sentiment'
+    test_df = pd.read_csv(r'data/test_dataset.csv')    # Same columns
     return (train_df, test_df)
 
 def train_classifier(param_grid):
@@ -71,7 +71,7 @@ def train_classifier(param_grid):
 def train_with_tuning(classifier, X_train, y_train, param_grid):
     if (param_grid is None):
         param_grid = {'C': [0.001, 0.01, 10],
-               'penalty': ['l1', 'l2'],
+               'penalty': ['l2'],
                'solver': ['liblinear', 'lbfgs']}
 
     # Perform grid search with cross-validation

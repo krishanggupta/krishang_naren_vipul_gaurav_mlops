@@ -1,0 +1,10 @@
+digest: 04255e18
+name: dataset
+profile: '{"features_shape": [25000, 10000], "features_size": 250000000, "features_nbytes":
+  2000000000}'
+schema: '{"mlflow_tensorspec": {"features": "[{\"type\": \"tensor\", \"tensor-spec\":
+  {\"dtype\": \"float64\", \"shape\": [-1, 10000]}}]", "targets": null}}'
+source: '{"tags": {"mlflow.user": "naren", "mlflow.source.name": "e:/Learnings/Masters/MTech-Applied
+  AI - VNIT- Intellipaat/Sem-2/ML Ops/Github/mlops-final/krishang_naren_vipul_gaurav_mlops/main.py",
+  "mlflow.source.type": "LOCAL", "mlflow.source.git.commit": "e2d5080acd670ee606ec6958ac01dd366c6e0790"}}'
+source_type: code
