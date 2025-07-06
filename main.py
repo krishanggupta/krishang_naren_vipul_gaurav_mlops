@@ -10,8 +10,7 @@ def ping():
 @app.post("/sentiment-analysis/train")
 def train_model():
     params = request.get_json()
-    sentiment_analyzer.train_model(params)
-    return params
+    return sentiment_analyzer.train_model(params)
 
 @app.post("/sentiment-analysis/predict")
 def predict_sentiment():
