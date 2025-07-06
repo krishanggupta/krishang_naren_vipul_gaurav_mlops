@@ -8,6 +8,8 @@ from sklearn.metrics import classification_report, accuracy_score,confusion_matr
 from nltk.corpus import stopwords
 import json, numpy as np
 import pickle, jsonify
+import mlflow
+import mlflow.sklearn
 
 
 def load_data():
@@ -34,6 +36,7 @@ def train_classifier(param_grid):
     # Encode sentiment (assuming 'positive' and 'negative')
     y_train = train_df['sentiment'] 
     y_test = test_df['sentiment']
+
 
     # Train model
     model = LogisticRegression()
@@ -70,11 +73,13 @@ def train_with_tuning(classifier, param_grid, X_train, y_train):
     #           'solver': ['liblinear', 'lbfgs']}
 
     # Perform grid search with cross-validation
+    mlflow.set_experiment('Team_1')
+    mlflow.autolog()
     grid = GridSearchCV(classifier, param_grid, cv=5, refit=True, verbose=0)
 
     # Fit the grid search to the training data
     grid.fit(X_train, y_train)
-
+    mlflow.sklearn.log_model(grid.best_estimator_,"Best_Estimator")
     return grid
 
     
