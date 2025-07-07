@@ -36,7 +36,7 @@ Flask APIs:
 					
 	3) GET Method --> To retrieve the best parameters for prediction:
 			
-			URL: http://127.0.0.1:5004/sentiment-analysis/predict
+			URL: http://127.0.0.1:5004/sentiment-analysis/get-best-parameter
 			
 			No Body required.
 			
